@@ -78,6 +78,14 @@ class AppointmentService {
 
     const eventStartTime = moment(datetime).utc();
     const endEventTime = eventStartTime.clone().add(duration, 'minute');
+
+    // find if any existing events exists in the given timewindow
+    const existingEvents = await dbService.isEventsExists(eventStartTime, endEventTime);
+
+    if (existingEvents) {
+      throw new Error('Appointment already scheduled during this time window.');
+    }
+
     const startTimeCal = moment(datetime).clone().startOf('day').tz(config.defaultTimeZone);
     const endTimeCal = moment(datetime).clone().endOf('day').tz(config.defaultTimeZone);
 
@@ -89,12 +97,6 @@ class AppointmentService {
       endEventTime.isAfter(moment(doctorWorkingTimeSlots[doctorWorkingTimeSlots.length - 1]).add(config.slotDuration, 'minute'))
     ) {
       throw new Error('Unable to schedule meeting outside working hours');
-    }
-
-    const existingEvents = await dbService.getEvents(eventStartTime, endEventTime);
-
-    if (existingEvents.length > 0) {
-      throw new Error('Appointment already scheduled during this time window.');
     }
 
     await dbService.createEvent({ datetime: eventStartTime.format(), duration });

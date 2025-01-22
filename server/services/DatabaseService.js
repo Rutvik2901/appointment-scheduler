@@ -6,6 +6,26 @@ class DatabaseService {
     this.db = getFirestore(firebase);
   }
 
+  async isEventsExists(startDate, endDate) {
+    try {
+      // Fetch events within the given timeframe
+      const eventsSnapshot = await getDocs(
+        query(
+          collection(this.db, 'events'),
+          where('datetime', '>=', startDate.format()),
+          where('datetime', '<=', endDate.format())
+        )
+      );
+  
+      // Return true if event exists
+      return !eventsSnapshot.empty;
+    } catch (error) {
+      console.error('Error fetching events:', error);
+      throw error;
+    }
+  }
+  
+
   async getEvents(startDate, endDate) {
     try {
       const eventsSnapshot = await getDocs(
