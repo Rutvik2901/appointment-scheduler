@@ -1,11 +1,11 @@
 const express = require('express');
 
-const {getFreeSlots, createEvent, getEvents} = require("../controllers/schedulerController.js"); 
+const appointmentController = require('../controllers/AppointmentController.js');
 
 const router = express.Router();
 
-router.get('/free-slots', getFreeSlots);
-router.post('/create-event', createEvent);
-router.get('/get-events', getEvents);
+router.get('/free-slots', appointmentController.getFreeSlots());
+router.post('/create-event', appointmentController.createEvent());
+router.get('/get-events', appointmentController.getEvents());
 
 module.exports = router;
