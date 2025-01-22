@@ -1,4 +1,4 @@
-const {firebaseConfig} = require('./config/config');
+const {firebaseConfig} = require('./config');
 const { initializeApp } = require('firebase/app');
 
 const firebase = initializeApp(firebaseConfig);

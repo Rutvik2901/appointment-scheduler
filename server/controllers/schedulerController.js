@@ -1,5 +1,5 @@
-const firebase =  require('../firebaseconfig');
-const config = require('../config.js');
+const firebase =  require('../config/firebaseconfig.js');
+const config = require('../config/config.js');
 const moment = require('moment-timezone');
 
 const {getFirestore, collection, addDoc, getDocs, query, where} = require('firebase/firestore');
