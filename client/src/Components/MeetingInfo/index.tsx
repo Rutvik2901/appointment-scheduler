@@ -48,9 +48,11 @@ const MeetingInfo: React.FC<Props> = ({ selectedTimezone, meetingDuration, setMe
 
   const returnDateRange = (date: string, duration: string) => {
     const addDurationToDate = moment(date).clone().add(duration, "minutes").format();
-    <>
-      {formateCurrentSchDate(date, dateFormat.hhmm)} - {formateCurrentSchDate(addDurationToDate, dateFormat.hhmm)},
-    </>;
+    return (
+      <>
+        {formateCurrentSchDate(date, dateFormat.hhmm)} - {formateCurrentSchDate(addDurationToDate, dateFormat.hhmm)},
+      </>
+    );
   };
 
   const formateCurrentSchDate = (date: string, format: dateFormat) => {

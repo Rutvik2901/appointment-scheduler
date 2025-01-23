@@ -7,8 +7,7 @@ class AppointmentController {
       const slots = await appointmentService.getFreeSlots(date, timezone);
       res.status(200).send(slots);
     } catch (error) {
-      console.error(error);
-      res.status(400).send({ error: error.message });
+      res.status(400).send(JSON.parse(error.message));
     }
   }
 
@@ -18,8 +17,7 @@ class AppointmentController {
       const response = await appointmentService.createEvent({ datetime, duration });
       res.status(200).send(response);
     } catch (error) {
-      console.error(error);
-      res.status(400).send({ error: error.message });
+      res.status(400).send(JSON.parse(error.message));
     }
   }
 
@@ -33,8 +31,7 @@ class AppointmentController {
       const events = await appointmentService.getEvents(startDate, endDate);
       res.status(200).send(events);
     } catch (error) {
-      console.error(error);
-      res.status(500).send({ error: 'Internal server error' });
+      res.status(500).send(JSON.parse(error.message));
     }
   }
 }

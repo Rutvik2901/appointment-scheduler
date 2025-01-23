@@ -26,7 +26,7 @@ class AppointmentService {
     const slots = [];
 
     // generate all the possible slots in hours
-    const hourSlot = generateTimeSlotsHour(config.startHour, config.endHour, config.slotDuration);
+    const hourSlot = this.generateTimeSlotsHour(config.startHour, config.endHour, config.slotDuration);
 
     while (startDate.isBefore(endDate)) {
       const nextTime = startDate.clone().add(interval, 'minutes');
@@ -48,14 +48,14 @@ class AppointmentService {
 
   async getFreeSlots(date, timezone = config.defaultTimeZone) {
     try {
-      if (!date) throw new Error({ message: 'Date is required' });
+      if (!date) throw new Error(JSON.stringify({ message: 'Date is required' }));
 
       const requestDate = moment.tz(date, 'YYYY-MM-DD', timezone);
       const currentDate = moment.tz(timezone).startOf('day');
 
       // Throw error if user tries to fetch slots for past date
       if (requestDate.isBefore(currentDate)) {
-        throw new Error({ message: 'Cannot fetch slots for past dates' });
+        throw new Error(JSON.stringify({ message: 'Cannot fetch slots for past dates' }));
       }
 
       // convert to current day's equivalent UTC timezone
@@ -83,15 +83,14 @@ class AppointmentService {
       }
 
     } catch (error) {
-      console.error(error);
-      throw new Error({ message: 'Internal server error' });
+      throw new Error(error.message ? error.message : JSON.stringify({ message: 'Internal server error' }));
     }
   }
 
   async createEvent(eventData) {
     try {
       const { datetime, duration } = eventData;
-      if (!datetime || !duration) throw new Error({ message: 'Invalid input' });
+      if (!datetime || !duration) throw new Error(JSON.stringify({ message: 'Invalid input', type: 'error' }));
 
       // convert to start time and end time of event
       const eventStartTime = moment(datetime).utc();
@@ -120,7 +119,7 @@ class AppointmentService {
 
       // Throw an error in case of user tries to schedule meeting outside working hours
       if (!isEndDateInRange || !isStartDateInRange || eventStartTime.day === 0) {
-        throw new Error({ message: 'Unable to schedule meeting outside working hours', type: 'error' });
+        throw new Error(JSON.stringify({ message: 'Unable to schedule meeting outside working hours', type: 'error' }));
       }
 
       let remainingDuration = duration;
@@ -138,8 +137,8 @@ class AppointmentService {
       // Check if all slots are available
       const existingEventsSnapshot = await dbService.getEventsInDateTime(slotsToCheck);
 
-      if (!existingEventsSnapshot.empty) {
-        throw new Error({ message: 'Appointment already scheduled during this time window.', type: 'warn' });
+      if (existingEventsSnapshot) {
+        throw new Error(JSON.stringify({ message: 'Appointment already scheduled during this time window.', type: 'warn' }));
       }
 
       // Create all events if slots are available
@@ -150,22 +149,20 @@ class AppointmentService {
 
       return { message: 'Your appointment has been scheduled', events: createdEvents, type: 'success' };
     } catch (error) {
-      console.error(error);
-      throw new Error({ message: 'Fail to schedule an appointment. Please try again after sometime', type: 'error' });
+      throw new Error(error.message ? error.message : JSON.stringify({ message: 'Fail to schedule an appointment. Please try again after sometime', type: 'error' }));
     }
   }
 
   async getEvents(startDate, endDate) {
     try {
-      if (!startDate || !endDate) throw new Error({ message: 'StartDate and EndDate are required' });
+      if (!startDate || !endDate) throw new Error(JSON.stringify({ message: 'StartDate and EndDate are required' }));
 
       const start = moment(startDate).utc();
       const end = moment(endDate).utc();
       const events = await dbService.getEvents(start, end);
       return events;
     } catch (error) {
-      console.error(error);
-      throw new Error({ message: 'Failed to fetch events', type: 'error' });
+      throw new Error(error.message ? error.message : JSON({ message: 'Failed to fetch events', type: 'error' }));
     }
   }
 }

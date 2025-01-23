@@ -4,6 +4,7 @@ const firebase = require('../config/firebaseconfig');
 class DatabaseService {
   constructor() {
     this.db = getFirestore(firebase);
+    this.eventsCollection = collection(this.db, 'events');
   }
 
   async isEventsExists(startDate, endDate) {
@@ -11,7 +12,7 @@ class DatabaseService {
       // Fetch events within the given timeframe
       const eventsSnapshot = await getDocs(
         query(
-          collection(this.db, 'events'),
+          this.eventsCollection,
           where('datetime', '>=', startDate.format()),
           where('datetime', '<=', endDate.format())
         )
@@ -29,7 +30,7 @@ class DatabaseService {
     try {
       const eventsSnapshot = await getDocs(
         query(
-          collection(db, 'events'),
+          this.eventsCollection,
           where('datetime', 'in', slotsToCheck.map((slot) => slot.datetime.format()))
         )
       );
@@ -46,7 +47,7 @@ class DatabaseService {
     try {
       const eventsSnapshot = await getDocs(
         query(
-          collection(this.db, 'events'),
+          this.eventsCollection,
           where('datetime', '>=', startDate.format()),
           where('datetime', '<=', endDate.format())
         )
@@ -60,7 +61,7 @@ class DatabaseService {
 
   async createEvent(eventData) {
     try {
-      const eventRef = await addDoc(collection(this.db, 'events'), eventData);
+      const eventRef = await addDoc(this.eventsCollection, eventData);
       return eventRef.id;
     } catch (error) {
       console.error('Error creating event:', error);
