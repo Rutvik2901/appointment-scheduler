@@ -1,11 +1,11 @@
-import { ClockCircleOutlined, EditOutlined, CalendarOutlined } from "@ant-design/icons";
-import { Typography, Input, Button } from "antd";
+import { CalendarOutlined, ClockCircleOutlined, EditOutlined } from "@ant-design/icons";
+import { Button, Input, Typography } from "antd";
+import moment from "moment-timezone";
 import { Calendar } from "primereact/calendar";
 import { Dialog } from "primereact/dialog";
 import { Message } from "primereact/message";
 import React, { useMemo, useState } from "react";
-import { baseUrl } from "../../utils";
-import moment from "moment-timezone";
+import { getMeetingBetweenTime } from "../../service/service";
 import styles from "./index.module.css";
 
 type Props = {
@@ -34,10 +34,10 @@ const MeetingInfo: React.FC<Props> = ({ selectedTimezone, meetingDuration, setMe
   const fetchAllAppointments = () => {
     if (dates && dates.length > 0) {
       setLoadingScheduleButton(true);
-      const firstDate = moment(dates[0]).tz(selectedTimezone).format();
-      const secondDate = moment(dates[1]).tz(selectedTimezone).endOf("day").format();
+      const endDate = moment(dates[0]).tz(selectedTimezone).format();
+      const startDate = moment(dates[1]).tz(selectedTimezone).endOf("day").format();
 
-      fetch(`${baseUrl}/get-events?startDate=${encodeURIComponent(firstDate)}&endDate=${encodeURIComponent(secondDate)}`)
+      getMeetingBetweenTime(endDate, startDate)
         .then((res) => res.json())
         .then((data) => {
           setAllSchedules(data);
