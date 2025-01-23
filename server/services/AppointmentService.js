@@ -1,6 +1,6 @@
 const moment = require('moment-timezone');
 const config = require('../config/config');
-const dbService = require('./DatabaseService');
+const dbService = require('../models/DatabaseService');
 
 class AppointmentService {
   generateTimeSlotsHour(startHour, endHour, interval) {

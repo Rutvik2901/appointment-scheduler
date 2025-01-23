@@ -1,7 +1,7 @@
 .appointmentSelect {
     background: #4338ca;
     height: 50px;
-    width: 48%;
+    width: 48% !important;
     font-weight: 500;
     font-size: 16px;
 }

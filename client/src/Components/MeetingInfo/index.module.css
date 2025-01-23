@@ -38,6 +38,9 @@
     flex-direction: column;
     gap: 16px;
     margin-top: 16px;
+    padding: 16px 0px 0px 16px;
+    height: 100%;
+    align-items: flex-start;
   }
   
   .durationInput {
