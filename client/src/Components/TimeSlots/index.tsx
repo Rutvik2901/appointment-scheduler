@@ -5,6 +5,7 @@ import { Message } from "primereact/message";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { createEvent, fetchFreeSlotsByDateAndTimeZone } from "../../service/service";
 import { Toast } from "primereact/toast";
+import styles from "./index.module.css";
 
 type Props = {
   setSelectedTime: (e: any) => void;
@@ -21,7 +22,7 @@ const TimeSlots: React.FC<Props> = ({ setSelectedTime, date, setLoading, selecte
   const toast = useRef<any>(null);
   const [creatingAppointment, setCreatingAppointment] = useState(false);
 
-  const showSuccess = (type: string, message: string) => {
+  const showToast = (type: string, message: string) => {
     toast.current.show({ severity: type, summary: type.substring(0, 1).toUpperCase() + type.substring(1), detail: message, life: 3000 });
   };
 
@@ -40,7 +41,7 @@ const TimeSlots: React.FC<Props> = ({ setSelectedTime, date, setLoading, selecte
 
   const saveAppointMent = () => {
     if (meetingDuration <= 0) {
-      showSuccess("error", "Please verify the meeting duration");
+      showToast("error", "Please verify the meeting duration");
       return;
     }
     setCreatingAppointment(true);
@@ -49,7 +50,7 @@ const TimeSlots: React.FC<Props> = ({ setSelectedTime, date, setLoading, selecte
     createEvent(body)
       .then((res) => res.json())
       .then((res) => {
-        showSuccess(res.type, res.message);
+        showToast(res.type, res.message);
 
         if (res.type === "success") {
           setMeetingDuration(30);
@@ -59,7 +60,7 @@ const TimeSlots: React.FC<Props> = ({ setSelectedTime, date, setLoading, selecte
         }
       })
       .catch(() => {
-        showSuccess("error", "Fail to schedule an appointment. Please try again after sometime");
+        showToast("error", "Fail to schedule an appointment. Please try again after sometime");
       })
       .finally(() => {
         setCreatingAppointment(false);
@@ -73,49 +74,17 @@ const TimeSlots: React.FC<Props> = ({ setSelectedTime, date, setLoading, selecte
   return (
     <>
       <Toast ref={toast} />
-      <div
-        className="scheduleInfo"
-        style={{
-          justifyContent: loading || (data && data.length === 0) ? "center" : "flex-start",
-        }}
-      >
+      <div className={`${loading || (data && data.length === 0) ? styles.justifyContentCenter : styles.justifyContentFlexStart} scheduleInfo`}>
         {loading ? (
-          <LoadingOutlined style={{ color: "#4338ca" }} />
+          <LoadingOutlined className={styles.loadingOutlined} />
         ) : data && data.length > 0 ? (
           data.map((d, index) => (
-            <div style={{ height: 50, display: "flex", cursor: "pointer", justifyContent: "space-between" }} onClick={() => setSelectedTime(d)}>
-              <Typography.Text
-                key={index}
-                style={{
-                  fontWeight: 500,
-                  border: selectedTime === d ? "none" : "1px solid #4338ca",
-                  borderRadius: 6,
-                  color: selectedTime === d ? "white" : "#4338ca",
-                  fontSize: 16,
-                  height: 50,
-                  width: selectedTime === d ? "48%" : "100%",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  background: selectedTime === d ? "#10182899" : "transparent",
-                }}
-              >
+            <div className={styles.timeSlots} onClick={() => setSelectedTime(d)}>
+              <Typography.Text key={index} className={`${selectedTime === d ? styles.timeZoneText : styles.deSelectedTimeZoneText} ${styles.timeZoneText}`}>
                 {moment(d).tz(selectedTimezone).format("hh:mm A")}
               </Typography.Text>
 
-              <Button
-                style={{
-                  background: "#4338ca",
-                  height: "50px",
-                  width: "48%",
-                  fontWeight: 500,
-                  fontSize: 16,
-                  display: selectedTime === d ? "inline-flex" : "none",
-                }}
-                loading={creatingAppointment}
-                type="primary"
-                onClick={saveAppointMent}
-              >
+              <Button className={`${selectedTime === d ? styles.inlineFlex : styles.displayNone} ${styles.appointmentSelect}`} loading={creatingAppointment} type="primary" onClick={saveAppointMent}>
                 {creatingAppointment ? "" : "Select"}
               </Button>
             </div>

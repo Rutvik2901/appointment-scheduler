@@ -1,0 +1,58 @@
+.appointmentSelect {
+    background: #4338ca;
+    height: 50px;
+    width: 48%;
+    font-weight: 500;
+    font-size: 16px;
+}
+
+.inlineFlex {
+    display: inline-flex;
+}
+
+.displayNone {
+    display: none;
+}
+
+.timeZoneText {
+    font-weight: 500;
+    border-radius: 6px;
+    font-size: 16px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    color: white;
+    width: 48%;
+    background-color: #10182899;
+}
+.selectedTimeZoneText {
+    border: none;
+    color: white;
+    width: 48%;
+    background-color: #10182899;
+}
+.deSelectedTimeZoneText {
+    border: 1px solid #4338ca;
+    color: #4338ca;
+    width: 100%;
+    background-color: transparent;
+}
+.justifyContentFlexStart {
+    justify-content: flex-start;
+}
+.justifyContentCenter {
+    justify-content: center;
+}
+
+.timeSlots {
+    height: 50px;
+    display: flex;
+    cursor: pointer;
+    justify-content: space-between;
+}
+
+.loadingOutlined {
+    color: #4338ca;
+}
