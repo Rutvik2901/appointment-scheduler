@@ -1,0 +1,67 @@
+
+.dialog {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .dialogContent {
+    display: flex;
+    gap: 16px;
+  }
+  
+  .findButton {
+    background: rgb(67, 56, 202);
+    font-weight: 500;
+    font-size: 14px;
+  }
+  
+  .appointmentsContainer {
+    display: flex;
+    flex-direction: column;
+    margin-top: 16px;
+  }
+  
+  .appointmentDetails {
+    color: #10182899;
+    font-weight: 600;
+    display: flex;
+    gap: 8px;
+    margin-top: 16px;
+  }
+  
+  .noAppointments {
+    margin-top: 16px;
+  }
+  
+  .meetingInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 16px;
+  }
+  
+  .durationInput {
+    display: flex;
+    align-items: center;
+  }
+  
+  .meetingDetails {
+    color: #10182899;
+    font-weight: 600;
+    display: flex;
+    gap: 8px;
+  }
+  
+  .findAppointmentsButton {
+    background: rgb(67, 56, 202);
+    font-weight: 500;
+    font-size: 14px;
+    margin-top: 32px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  .svgIcon {
+    font-size: 16px;
+  }
+  
