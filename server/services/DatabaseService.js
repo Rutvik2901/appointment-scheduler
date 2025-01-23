@@ -16,7 +16,7 @@ class DatabaseService {
           where('datetime', '<=', endDate.format())
         )
       );
-  
+
       // Return true if event exists
       return !eventsSnapshot.empty;
     } catch (error) {
@@ -24,7 +24,23 @@ class DatabaseService {
       throw error;
     }
   }
-  
+
+  async getEventsInDateTime(slotsToCheck) {
+    try {
+      const eventsSnapshot = await getDocs(
+        query(
+          collection(db, 'events'),
+          where('datetime', 'in', slotsToCheck.map((slot) => slot.datetime.format()))
+        )
+      );
+
+      return !eventsSnapshot.empty;
+    } catch (error) {
+      console.error('Error fetching events:', error);
+      throw error;
+    }
+  }
+
 
   async getEvents(startDate, endDate) {
     try {
